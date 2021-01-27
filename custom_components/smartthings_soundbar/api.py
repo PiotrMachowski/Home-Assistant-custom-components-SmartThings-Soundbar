@@ -57,7 +57,7 @@ class SoundbarApi:
         else:
             self._state = STATE_OFF
         self._volume = device_volume
-        self._source_list = device_all_sources["value"]
+        self._source_list = device_all_sources
         self._muted = device_muted
         self._source = device_source
         if self._state in [STATE_PLAYING, STATE_PAUSED]:
