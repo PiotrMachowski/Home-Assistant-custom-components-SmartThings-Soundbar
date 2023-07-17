@@ -107,6 +107,9 @@ class SmartThingsSoundbarMediaPlayer(MediaPlayerEntity):
     def select_source(self, source, cmdtype="selectsource"):
         SoundbarApi.send_command(self, source, cmdtype)
 
+    def select_sound_mode(self, sound_mode):
+        SoundbarApi.send_command(self, sound_mode, "selectsoundmode")
+
     @property
     def device_class(self):
         return DEVICE_CLASS_SPEAKER

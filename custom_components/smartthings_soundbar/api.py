@@ -106,4 +106,21 @@ class SoundbarApi:
             API_COMMAND_ARG = "['{}']}}]}}".format(argument)
             API_FULL = API_COMMAND_DATA + API_COMMAND_ARG
             cmdurl = requests.post(API_COMMAND, data=API_FULL, headers=REQUEST_HEADERS)
+        elif cmdtype == "soundmode":  # changes source
+            API_COMMAND_DATA = f"""{{
+                   "commands":[
+                      {{
+                         "component":"main",
+                         "capability":"execute",
+                         "command":"execute",
+                         "arguments":[
+                            "/sec/networkaudio/soundmode",
+                            {{
+                               "x.com.samsung.networkaudio.soundmode":"{argument}"
+                            }}
+                         ]
+                      }}
+                   ]
+                }}"""
+            cmdurl = requests.post(API_COMMAND, data=API_COMMAND_DATA, headers=REQUEST_HEADERS)
         self.async_schedule_update_ha_state()
