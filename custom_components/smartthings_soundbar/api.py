@@ -106,7 +106,7 @@ class SoundbarApi:
             API_COMMAND_ARG = "['{}']}}]}}".format(argument)
             API_FULL = API_COMMAND_DATA + API_COMMAND_ARG
             cmdurl = requests.post(API_COMMAND, data=API_FULL, headers=REQUEST_HEADERS)
-        elif cmdtype == "soundmode":  # changes source
+        elif cmdtype == "selectsoundmode":
             API_COMMAND_DATA = f"""{{
                    "commands":[
                       {{
