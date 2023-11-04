@@ -16,7 +16,8 @@ from homeassistant.components.media_player.const import (
     SUPPORT_TURN_ON,
     SUPPORT_VOLUME_MUTE,
     SUPPORT_VOLUME_STEP,
-    SUPPORT_VOLUME_SET
+    SUPPORT_VOLUME_SET,
+    SUPPORT_SELECT_SOUND_MODE
 )
 from homeassistant.const import (
     CONF_NAME, CONF_API_KEY, CONF_DEVICE_ID
@@ -37,6 +38,7 @@ SUPPORT_SMARTTHINGS_SOUNDBAR = (
         | SUPPORT_TURN_OFF
         | SUPPORT_TURN_ON
         | SUPPORT_PLAY
+        | SUPPORT_SELECT_SOUND_MODE
 )
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
