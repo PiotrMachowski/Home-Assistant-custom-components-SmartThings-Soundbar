@@ -62,10 +62,7 @@ Make sure your device is connected to yout SmartThings account.
 
 Obtain an API key from https://account.smartthings.com/tokens
 
-Go [here](https://graph-eu01-euwest1.api.smartthings.com/device/list) for your device id for each device. Click on the name of your device and the device id will be in the URL
-
-> https://graph-eu01-euwest1.api.smartthings.com/device/show/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXX
-
+Once you're signed in on that page, go to https://api.smartthings.com/v1/devices to see a list of your devices and their device IDs.
 
 ## Installation
 
@@ -101,6 +98,7 @@ rm smartthings_soundbar.zip
 This integration was confirmed to work with following devices:
 
 - Samsung HW-N950
+- Samsung HW-Q800B
 - Samsung HW-Q800T
 - Samsung HW-Q950T
 - Samsung HW-Q990B
