@@ -69,6 +69,7 @@ class SmartThingsSoundbarMediaPlayer(MediaPlayerEntity):
     def update(self):
         SoundbarApi.device_update(self)
 
+    @property
     def unique_id(self) -> str | None:
         return f"SmartThings_Soundbar_{self._device_id}"
 
