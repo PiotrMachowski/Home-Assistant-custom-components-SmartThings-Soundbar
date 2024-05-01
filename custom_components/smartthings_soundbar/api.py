@@ -1,7 +1,7 @@
 import json
 
 import requests
-from homeassistant.const import (STATE_IDLE, STATE_OFF, STATE_ON, STATE_PAUSED, STATE_PLAYING)
+from homeassistant.const import (STATE_OFF, STATE_ON, STATE_PAUSED, STATE_PLAYING)
 
 API_BASEURL = "https://api.smartthings.com/v1"
 API_DEVICES = API_BASEURL + "/devices/"
@@ -22,18 +22,19 @@ CONTROLLABLE_SOURCES = ["bluetooth", "wifi"]
 class SoundbarApi:
 
     @staticmethod
-    def device_update(self):
-        API_KEY = self._api_key
+    def device_update(entity):
+        API_KEY = entity._api_key
         REQUEST_HEADERS = {"Authorization": "Bearer " + API_KEY}
-        DEVICE_ID = self._device_id
+        DEVICE_ID = entity._device_id
         API_DEVICE = API_DEVICES + DEVICE_ID
         API_DEVICE_STATUS = API_DEVICE + "/states"
         API_COMMAND = API_DEVICE + "/commands"
         cmdurl = requests.post(API_COMMAND, data=COMMAND_REFRESH, headers=REQUEST_HEADERS)
         resp = requests.get(API_DEVICE_STATUS, headers=REQUEST_HEADERS)
         data = resp.json()
+
         device_volume = data['main']['volume']['value']
-        device_volume = min(int(device_volume) / self._max_volume, 1)
+        device_volume = min(int(device_volume) / entity._max_volume, 1)
         switch_state = data['main']['switch']['value']
         playback_state = data['main']['playbackStatus']['value']
         device_source = data['main']['inputSource']['value']
@@ -41,38 +42,38 @@ class SoundbarApi:
         device_muted = data['main']['mute']['value'] != "unmuted"
 
         if switch_state == "on":
-            if device_source in CONTROLLABLE_SOURCES:
+            if device_source.lower() in CONTROLLABLE_SOURCES:
                 if playback_state == "playing":
-                    self._state = STATE_PLAYING
+                    entity._state = STATE_PLAYING
                 elif playback_state == "paused":
-                    self._state = STATE_PAUSED
+                    entity._state = STATE_PAUSED
                 else:
-                    self._state = STATE_ON
+                    entity._state = STATE_ON
             else:
-                self._state = STATE_ON
+                entity._state = STATE_ON
         else:
-            self._state = STATE_OFF
-        self._volume = device_volume
-        self._source_list = device_all_sources if type(device_all_sources) is list else device_all_sources["value"]
-        self._muted = device_muted
-        self._source = device_source
-        if self._state in [STATE_PLAYING, STATE_PAUSED] and 'trackDescription' in data['main']:
-            self._media_title = data['main']['trackDescription']['value']
+            entity._state = STATE_OFF
+        entity._volume = device_volume
+        entity._source_list = device_all_sources if type(device_all_sources) is list else device_all_sources["value"]
+        entity._muted = device_muted
+        entity._source = device_source
+        if entity._state in [STATE_PLAYING, STATE_PAUSED] and 'trackDescription' in data['main']:
+            entity._media_title = data['main']['trackDescription']['value']
         else:
-            self._media_title = None
+            entity._media_title = None
 
     @staticmethod
-    def send_command(self, argument, cmdtype):
-        API_KEY = self._api_key
+    def send_command(entity, argument, cmdtype):
+        API_KEY = entity._api_key
         REQUEST_HEADERS = {"Authorization": "Bearer " + API_KEY}
-        DEVICE_ID = self._device_id
+        DEVICE_ID = entity._device_id
         API_DEVICES = API_BASEURL + "/devices/"
         API_DEVICE = API_DEVICES + DEVICE_ID
         API_COMMAND = API_DEVICE + "/commands"
 
         if cmdtype == "setvolume":  # sets volume
             API_COMMAND_DATA = "{'commands':[{'component': 'main','capability': 'audioVolume','command': 'setVolume','arguments': "
-            volume = int(argument * self._max_volume)
+            volume = int(argument * entity._max_volume)
             API_COMMAND_ARG = "[{}]}}]}}".format(volume)
             API_FULL = API_COMMAND_DATA + API_COMMAND_ARG
             cmdurl = requests.post(API_COMMAND, data=API_FULL, headers=REQUEST_HEADERS)
@@ -84,7 +85,7 @@ class SoundbarApi:
                 API_COMMAND_DATA = "{'commands':[{'component': 'main','capability': 'audioVolume','command': 'volumeDown'}]}"
                 cmdurl = requests.post(API_COMMAND, data=API_COMMAND_DATA, headers=REQUEST_HEADERS)
         elif cmdtype == "audiomute":  # mutes audio
-            if self._muted == False:
+            if entity._muted == False:
                 cmdurl = requests.post(API_COMMAND, data=COMMAND_MUTE, headers=REQUEST_HEADERS)
             else:
                 cmdurl = requests.post(API_COMMAND, data=COMMAND_UNMUTE, headers=REQUEST_HEADERS)
@@ -123,4 +124,4 @@ class SoundbarApi:
                    ]
                 }}"""
             cmdurl = requests.post(API_COMMAND, data=API_COMMAND_DATA, headers=REQUEST_HEADERS)
-        self.async_schedule_update_ha_state()
+        entity.schedule_update_ha_state()

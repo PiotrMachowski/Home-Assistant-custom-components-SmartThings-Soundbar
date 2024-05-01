@@ -58,9 +58,9 @@ media_player:
 
 ## Getting API key and device id
 
-Make sure your device is connected to yout SmartThings account.
+Make sure your device is connected to your SmartThings account.
 
-Obtain an API key from https://account.smartthings.com/tokens
+Obtain an API key by following [these steps](https://www.home-assistant.io/integrations/smartthings/#personal-access-token-pat).
 
 Once you're signed in on that page, go to https://api.smartthings.com/v1/devices to see a list of your devices and their device IDs.
 

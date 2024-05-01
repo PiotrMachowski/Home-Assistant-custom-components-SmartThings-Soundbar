@@ -5,19 +5,9 @@ from .api import SoundbarApi
 
 from homeassistant.components.media_player import (
     MediaPlayerEntity,
+    MediaPlayerEntityFeature,
     PLATFORM_SCHEMA,
     DEVICE_CLASS_SPEAKER,
-)
-from homeassistant.components.media_player.const import (
-    SUPPORT_PAUSE,
-    SUPPORT_PLAY,
-    SUPPORT_SELECT_SOURCE,
-    SUPPORT_TURN_OFF,
-    SUPPORT_TURN_ON,
-    SUPPORT_VOLUME_MUTE,
-    SUPPORT_VOLUME_STEP,
-    SUPPORT_VOLUME_SET,
-    SUPPORT_SELECT_SOUND_MODE
 )
 from homeassistant.const import (
     CONF_NAME, CONF_API_KEY, CONF_DEVICE_ID
@@ -30,15 +20,15 @@ DEFAULT_NAME = "SmartThings Soundbar"
 CONF_MAX_VOLUME = "max_volume"
 
 SUPPORT_SMARTTHINGS_SOUNDBAR = (
-        SUPPORT_PAUSE
-        | SUPPORT_VOLUME_STEP
-        | SUPPORT_VOLUME_MUTE
-        | SUPPORT_VOLUME_SET
-        | SUPPORT_SELECT_SOURCE
-        | SUPPORT_TURN_OFF
-        | SUPPORT_TURN_ON
-        | SUPPORT_PLAY
-        | SUPPORT_SELECT_SOUND_MODE
+        MediaPlayerEntityFeature.PAUSE
+        | MediaPlayerEntityFeature.VOLUME_STEP
+        | MediaPlayerEntityFeature.VOLUME_MUTE
+        | MediaPlayerEntityFeature.VOLUME_SET
+        | MediaPlayerEntityFeature.SELECT_SOURCE
+        | MediaPlayerEntityFeature.TURN_OFF
+        | MediaPlayerEntityFeature.TURN_ON
+        | MediaPlayerEntityFeature.PLAY
+        | MediaPlayerEntityFeature.SELECT_SOUND_MODE
 )
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
@@ -78,6 +68,9 @@ class SmartThingsSoundbarMediaPlayer(MediaPlayerEntity):
 
     def update(self):
         SoundbarApi.device_update(self)
+
+    def unique_id(self) -> str | None:
+        return f"SmartThings_Soundbar_{self._device_id}"
 
     def turn_off(self):
         arg = ""
