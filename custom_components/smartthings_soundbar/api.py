@@ -96,6 +96,11 @@ class SoundbarApi:
             cmdurl = requests.post(API_COMMAND, data=COMMAND_PLAY, headers=REQUEST_HEADERS)
         elif cmdtype == "pause":  # pause
             cmdurl = requests.post(API_COMMAND, data=COMMAND_PAUSE, headers=REQUEST_HEADERS)
+        elif cmdtype == "selectsoundmode":  # changes sounde mode
+            API_COMMAND_DATA = "{'commands':[{'component': 'main','capability': 'execute','command': 'execute', 'arguments': "
+            API_COMMAND_ARG = "['{}']}}]}}".format(argument)
+            API_FULL = API_COMMAND_DATA + API_COMMAND_ARG
+            cmdurl = requests.post(API_COMMAND, data=API_FULL, headers=REQUEST_HEADERS)
         elif cmdtype == "selectsource":  # changes source
             API_COMMAND_DATA = "{'commands':[{'component': 'main','capability': 'mediaInputSource','command': 'setInputSource', 'arguments': "
             API_COMMAND_ARG = "['{}']}}]}}".format(argument)

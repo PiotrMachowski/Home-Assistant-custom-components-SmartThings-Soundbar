@@ -68,6 +68,8 @@ class SmartThingsSoundbarMediaPlayer(MediaPlayerEntity):
         self._muted = False
         self._playing = True
         self._state = "on"
+        self._sound_mode = ""
+        self._sound_mode_list = []
         self._source = ""
         self._source_list = []
         self._media_title = ""
@@ -98,6 +100,9 @@ class SmartThingsSoundbarMediaPlayer(MediaPlayerEntity):
     def volume_down(self, cmdtype="stepvolume"):
         arg = ""
         SoundbarApi.send_command(self, arg, cmdtype)
+
+    def select_sound_mode(self, soundmode, cmdtype="selectsoundmode"):
+        SoundbarApi.send_command(self, soundmode, cmdtype)
 
     def select_source(self, source, cmdtype="selectsource"):
         SoundbarApi.send_command(self, source, cmdtype)
@@ -139,6 +144,14 @@ class SmartThingsSoundbarMediaPlayer(MediaPlayerEntity):
     @property
     def volume_level(self):
         return self._volume
+
+    @property
+    def sound_mode(self):
+        return self._sound_mode
+
+    @property
+    def sound_mode_list(self):
+        return self._sound_mode_list
 
     @property
     def source(self):
